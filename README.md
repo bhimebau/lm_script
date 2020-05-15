@@ -12,7 +12,8 @@ sensor's time to match the system time within one second.
 **Example Usage:**
 
 ```bash
-bhimebau@mercury:~/forge/outdoor-monitor/lm_script$ ./settime.py -p /dev/ttyACM0Sensor's Old Date/Time: 05/15/2020 08:53:50
+bhimebau@mercury:~/forge/outdoor-monitor/lm_script$ ./settime.py -p /dev/ttyACM0
+Sensor's Old Date/Time: 05/15/2020 08:53:50
 Sensor's New Date/Time: 05/15/2020 08:53:50
 bhimebau@mercury:~/forge/outdoor-monitor/lm_script$
 ```
@@ -30,7 +31,8 @@ time when a significant drift is expected.
 **Example Usage:**
 
 ```bash
-bhimebau@mercury:~/forge/outdoor-monitor/lm_script$ ./gettime.py -p /dev/ttyACM0Sensor's Current Date/Time: 05/15/2020 08:53:00
+bhimebau@mercury:~/forge/outdoor-monitor/lm_script$ ./gettime.py -p /dev/ttyACM0
+Sensor's Current Date/Time: 05/15/2020 08:53:00
 Time Delta (Sensor Time-System Time): 0 seconds
 bhimebau@mercury:~/forge/outdoor-monitor/lm_script$ 
 ```
