@@ -1,4 +1,11 @@
-all: set_time
+all: 
 
-set_time: lm.py
-	./lm.py
+settime: settime.py lm.py
+	./settime.py -p /dev/ttyACM0
+
+gettime: gettime.py lm.py
+	./gettime.py -p /dev/ttyACM0
+
+
+
+
