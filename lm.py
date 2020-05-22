@@ -27,7 +27,9 @@ class LightMon:
         if (self.check_comm()!=True):
             print "Lightmon failed to Respond to AT command "
             sys.exit(1)
-#        if (self.whoami()!=True):
+
+        self.uid = 0
+        #        if (self.whoami()!=True):
 #            print "Lightmon failed to Respond to UID command"
 #            sys.exit(1)
         self.command_return_string = ""
@@ -161,21 +163,50 @@ class LightMon:
         print cmd_str
         self.send_command(cmd_str,10)
 
-    def cal_write(self,mag):
+    def cal_write(self,mag,value):
         mag = round(mag,1)
         if ((mag<19.4) or (mag>24.1)):
             return (-1)
-        cmd_str = "cal,write,%.1f"%(mag)
+        cmd_str = "cal,write,%.1f,%d"%(mag,value)
         print cmd_str
-        self.send_command(cmd_str,300)
+        self.send_command(cmd_str,600)
+
+    def cal_read(self):
+        self.send_command("cal",600)
+        return (self.command_return_string)
 
     def cal_erase(self):
         cmd_str = "ef,cal"
         self.send_command(cmd_str,300)
+        
+    def cal_store(self):
+        cmd_str = "cal,store"
+        self.send_command(cmd_str,300)
 
-#    def cal_store(
-       
+    def cal_load(self):
+        cmd_str = "cal,load"
+        self.send_command(cmd_str,300)
+        
+    def cal_complete(self):
+        cmd_str = "cal,complete"
+        self.send_command(cmd_str,300)
+
+    def cal_lookup(self,value):
+        cmd_str = "cal,lookup,%d"%(value)
+        self.send_command(cmd_str,10)
+        return (self.command_return_string)
                    
+    def get_uid(self):
+        self.send_command("uid",10)
+        self.uid = self.command_return_string
+        return (self.command_return_string)
+
+    def tsl237_read_raw(self):
+        self.send_command("tsl237,raw",600)
+        return (self.command_return_string)
+
+    
+
 if __name__ == "__main__":
     lm = LightMon()
     print lm.uid
