@@ -1,4 +1,4 @@
-\all: 
+all: 
 
 settime: settime.py lm.py
 	./settime.py -p /dev/ttyACM0
@@ -17,3 +17,6 @@ read_cal: read_cal.py lm.py
 
 get_uid: get_uid.py lm.py
 	./get_uid.py -p /dev/ttyACM0
+
+led_cal: sqm.py lm.py led_source_cal.py
+	./led_source_cal.py -p /dev/ttyACM0 -q /dev/ttyUSB0 -o led_data_3.csv

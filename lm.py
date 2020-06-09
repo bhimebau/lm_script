@@ -205,7 +205,12 @@ class LightMon:
         self.send_command("tsl237,raw",600)
         return (self.command_return_string)
 
-    
+    def dac_write_raw(self,dac,rg):
+        cmd_str = "sky,raw,%d,%d"%(int(dac),int(rg))
+#        print cmd_str
+        self.send_command(cmd_str,10)
+        return (self.command_return_string)
+   
 
 if __name__ == "__main__":
     lm = LightMon()
