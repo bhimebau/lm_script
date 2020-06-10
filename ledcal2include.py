@@ -63,6 +63,23 @@ import lm
 import argparse
 import time
 import numpy as np
+from scipy import interpolate
+
+def minmax(array):
+    minval = 5000
+    maxval = 0
+    for element in array:
+        if (element == 19.56 or
+            element == 19.54 or
+            element == 19.52 or
+            element == 19.50):
+            pass
+        else:
+            if element < minval:
+                minval = element
+            if element > maxval:
+                maxval = element
+    return (minval,maxval)
 
 if __name__ == "__main__":
 
@@ -73,30 +90,100 @@ if __name__ == "__main__":
                         required=True)
     parser.add_argument('-o',
                         dest='outfile',
-                        help='c file to create: example skydata.c',
+                        help='basename of c/h files to create: example skydata where skydata.c and skydata.h will be created',
                         required=True)
 
     
     args = parser.parse_args()
     infile_handle = open(args.infile,"r")
-    outfile_handle = open(args.outfile,"w+")
-    
-    
-    
-    sensor = lm.LightMon(args.port)
-    print "Initializing the Light Source"
-    light = lm.LightMon(args.led)
+    c_outfile_handle = open(args.outfile+".c","w+")
+    h_outfile_handle = open(args.outfile+".h","w+")
+    line = infile_handle.readline()
+    dac = []
+    r_316 = []
+    r_1000 = []
+    r_10000 = []
+    r_47600 = []
+       
+    while line:
+#        print line,
+        line_list = line.split(",")
+        dac.append(float(line_list[0]))
+        r_316.append(float(line_list[1]))
+        r_1000.append(float(line_list[2]))
+        r_10000.append(float(line_list[3]))
+        r_47600.append(float(line_list[4]))
+        line = infile_handle.readline()
+    dac = np.array(dac)
+    r_316 = np.array(r_316)
+    r_1000 = np.array(r_1000)
+    r_10000 = np.array(r_10000)
+    r_47600 = np.array(r_47600)
 
-    print "Erasing the Flash"
-    sensor.cal_erase()                        # Erase the flash page for cal to -1  
-    print "Loading the initial values from flash to SRAM"
-    sensor.cal_load()                         # Load -1 from the flash to SRAM 
-    array = np.arange(19.4,24.2,.1)           # Create an array of possible light values
-    for sky in array:                         # Step through each value
-        value = np.around(sky,1)
-        light.sky_write(value)
-        sensor_data = int(sensor.tsl237_read_raw())
-        sensor.cal_write(value,sensor_data)
-    sensor.cal_store()
-    sensor.close_port()
-    light.close_port()
+    mins = []
+    mins.append(minmax(r_316)[0])
+    mins.append(minmax(r_1000)[0])
+    mins.append(minmax(r_10000)[0])
+    mins.append(minmax(r_47600)[0])
+    mins = np.array(mins)
+    lowest_val = round(minmax(mins)[0]+.1,1)
+    if lowest_val < 15:
+        lowest_val = 15
+    # print lowest_val 
+
+    maxs = []
+    maxs.append(minmax(r_316)[1])
+    maxs.append(minmax(r_1000)[1])
+    maxs.append(minmax(r_10000)[1])
+    maxs.append(minmax(r_47600)[1])
+    maxs = np.array(maxs)
+    highest_val = round(minmax(maxs)[1]-.1,1)
+    if highest_val > 26:
+        highest_val = 26
+   #  print highest_val 
+    
+    steps = np.arange(lowest_val,highest_val+.1,.1)
+    steps = steps[::-1]
+
+    f_316 = interpolate.interp1d(r_316, dac)
+    f_1000 = interpolate.interp1d(r_1000, dac)
+    f_10000 = interpolate.interp1d(r_10000, dac)
+    f_47600 = interpolate.interp1d(r_47600, dac)
+
+    out_array = []
+    range_res = 3
+    for step in steps:
+        if step < mins[range_res]:
+            range_res = range_res - 1
+            if range_res < 0:
+                range_res = 0
+        if range_res == 3:
+            yval = f_47600(step)
+        elif range_res == 2:
+            yval = f_10000(step)
+        elif range_res == 1:
+            yval = f_1000(step)
+        else:
+            yval = f_316(step)
+        out_array.append([round(step,1), int(yval), range_res, "0x%04x"%(yval+(4096*range_res))])
+
+    # Reverse array to allow C file generation from brightest to darkest
+    out_array = out_array[::-1]
+    
+    h_outfile_handle.write("#define DARKEST_VALUE_ALLOWED %d\n"%(int(out_array[-1][0]*10)))
+    h_outfile_handle.write("#define BRIGHTEST_VALUE_ALLOWED %d\n\n"%(int(out_array[0][0]*10)))
+
+    h_outfile_handle.write("extern uint16_t skydata[];\n")
+
+
+    c_outfile_handle.write("#include \"skydata.h\"\n\n")
+    c_outfile_handle.write("uint16_t skydata[DARKEST_VALUE_ALLOWED-BRIGHTEST_VALUE_ALLOWED+1] = {\n")
+    for element in out_array:
+        if element[0]!=out_array[-1][0]:
+            c_outfile_handle.write("  %s, // %2.1f\n"%(element[3],element[0]))
+        else:
+            c_outfile_handle.write("  %s  // %2.1f\n"%(element[3],element[0]))
+    c_outfile_handle.write("};\n")
+    infile_handle.close()
+    c_outfile_handle.close()
+    h_outfile_handle.close()
