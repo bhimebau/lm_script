@@ -170,14 +170,15 @@ if __name__ == "__main__":
     # Reverse array to allow C file generation from brightest to darkest
     out_array = out_array[::-1]
     
+    h_outfile_handle.write("#include <stdint.h>\n\n")
     h_outfile_handle.write("#define DARKEST_VALUE_ALLOWED %d\n"%(int(out_array[-1][0]*10)))
     h_outfile_handle.write("#define BRIGHTEST_VALUE_ALLOWED %d\n\n"%(int(out_array[0][0]*10)))
 
-    h_outfile_handle.write("extern uint16_t skydata[];\n")
+    h_outfile_handle.write("extern const uint16_t skydata[];\n")
 
 
     c_outfile_handle.write("#include \"skydata.h\"\n\n")
-    c_outfile_handle.write("uint16_t skydata[DARKEST_VALUE_ALLOWED-BRIGHTEST_VALUE_ALLOWED+1] = {\n")
+    c_outfile_handle.write("const uint16_t skydata[DARKEST_VALUE_ALLOWED-BRIGHTEST_VALUE_ALLOWED+1] = {\n")
     for element in out_array:
         if element[0]!=out_array[-1][0]:
             c_outfile_handle.write("  %s, // %2.1f\n"%(element[3],element[0]))

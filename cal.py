@@ -39,7 +39,8 @@ if __name__ == "__main__":
     sensor.cal_erase()                        # Erase the flash page for cal to -1  
     print "Loading the initial values from flash to SRAM"
     sensor.cal_load()                         # Load -1 from the flash to SRAM 
-    array = np.arange(19.4,24.2,.1)           # Create an array of possible light values
+#    array = np.arange(15.3,26.1,.1)          # Create an array of possible light values
+    array = np.arange(15.3,24.1,.1)           # Create an array of possible light values
     for sky in array:                         # Step through each value
         value = np.around(sky,1)
         light.sky_write(value)

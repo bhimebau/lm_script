@@ -157,66 +157,74 @@ class LightMon:
         
     def sky_write(self,mag):
         mag = round(mag,1)
-        if ((mag<19.4) or (mag>24.1)):
+        if ((mag<15.3) or (mag>26.0)):
             return (-1)
-        cmd_str = "sky,%.1f"%(mag)
+#        cmd_str = "sky,%.1f"%(mag)
+        cmd_str = "sky,table,%2.1f"%(mag)
         print cmd_str
-        self.send_command(cmd_str,10)
+        self.send_command(cmd_str,10000)
 
     def cal_write(self,mag,value):
         mag = round(mag,1)
-        if ((mag<19.4) or (mag>24.1)):
+        if ((mag<15.3) or (mag>26.0)):
             return (-1)
         cmd_str = "cal,write,%.1f,%d"%(mag,value)
         print cmd_str
-        self.send_command(cmd_str,600)
+        self.send_command(cmd_str,10000)
 
     def cal_read(self):
-        self.send_command("cal",600)
+        self.send_command("cal",10000)
         return (self.command_return_string)
 
     def cal_erase(self):
         cmd_str = "ef,cal"
-        self.send_command(cmd_str,300)
+        self.send_command(cmd_str,10000)
         
     def cal_store(self):
         cmd_str = "cal,store"
-        self.send_command(cmd_str,300)
+        self.send_command(cmd_str,10000)
 
     def cal_load(self):
         cmd_str = "cal,load"
-        self.send_command(cmd_str,300)
+        self.send_command(cmd_str,10000)
         
     def cal_complete(self):
         cmd_str = "cal,complete"
-        self.send_command(cmd_str,300)
+        self.send_command(cmd_str,10000)
 
     def cal_lookup(self,value):
         cmd_str = "cal,lookup,%d"%(value)
-        self.send_command(cmd_str,10)
+        self.send_command(cmd_str,10000)
         return (self.command_return_string)
                    
     def get_uid(self):
-        self.send_command("uid",10)
+        self.send_command("uid",10000)
         self.uid = self.command_return_string
         return (self.command_return_string)
 
     def tsl237_read_raw(self):
-        self.send_command("tsl237,raw",600)
+        self.send_command("tsl237,raw",10000)
         return (self.command_return_string)
 
     def dac_write_raw(self,dac,rg):
         cmd_str = "sky,raw,%d,%d"%(int(dac),int(rg))
 #        print cmd_str
-        self.send_command(cmd_str,10)
+        self.send_command(cmd_str,10000)
         return (self.command_return_string)
    
+    def dac_write_table(self,sky):
+        cmd_str = "sky,table,%2.1f"%(sky)
+        print cmd_str
+        self.send_command(cmd_str,10000)
+        return (self.command_return_string)
 
+
+    
 if __name__ == "__main__":
     lm = LightMon()
     print lm.uid
     lm.settime()
-    lm.send_command("tr",10)
+    lm.send_command("tr",10000)
     print lm.command_return_string
     data_string = lm.get_data()
     print data_string
