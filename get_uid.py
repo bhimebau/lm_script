@@ -21,5 +21,5 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
     sensor = lm.LightMon(args.port)
-    print sensor.uid
+    print sensor.get_uid()
     sensor.close_port()

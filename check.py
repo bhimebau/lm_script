@@ -18,11 +18,12 @@ import numpy as np
 from twilio.rest import Client
 
 if __name__ == "__main__":
+
     account_sid = 'AC073919b600761868be304dbce85d1d8b'
     auth_token='56fa4d513f8a3d09d8466c11eac6b999'
     
     client = Client(account_sid, auth_token)
-   
+
     parser = argparse.ArgumentParser(description='Set LightMon time and date')
     parser.add_argument('-p',
                         dest='port',
@@ -33,32 +34,36 @@ if __name__ == "__main__":
                         help='Serial port device where light source is connected: /dev/ttyACM1',
                         required=True)
 
-    
+    parser.add_argument('-n',
+                        dest='num',
+                        help='Serial number of the sensor',
+                        required=True)
+        
     args = parser.parse_args()
     print "Initializing the Sensor"
     sensor = lm.LightMon(args.port)
     print "Initializing the Light Source"
     light = lm.LightMon(args.led)
 
-    print "Erasing the Flash"
-    sensor.cal_erase()                        # Erase the flash page for cal to -1  
-    print "Loading the initial values from flash to SRAM"
-    sensor.cal_load()                         # Load -1 from the flash to SRAM 
-#    array = np.arange(15.3,26.1,.1)          # Create an array of possible light values
-    array = np.arange(15.3,24.1,.1)           # Create an array of possible light values
+    outfile = open("./sensors/%s_check.csv"%(args.num),"w+")
+#    outfile = open("%s_check.csv"%(sensor.get_uid().rstrip()),"w+")
+
+#    outfile = open(args.output,"w+")
+    
+    array = np.arange(15.4,23.3,.1)           # Create an array of possible light values
     for sky in array:                         # Step through each value
         value = np.around(sky,1)
         light.sky_write(value)
-        sensor_data = int(sensor.tsl237_read_raw())
-        sensor.cal_write(value,sensor_data)
-    sensor.cal_store()
+        sensor_data = float(sensor.tsl237_read_mag())
+        outstr =  "%2.1f,%2.2f,%f\n"%(value,sensor_data,value-sensor_data)
+        outfile.write(outstr)
+        print outstr,
+    outfile.close()
     sensor.close_port()
     light.close_port()
     message = client.messages \
                     .create(
-                        body="Done with Calibration",
+                        body="Done with Check",
                         from_='12562697917',
                         to='+18123256673'
                     )
-    
-    

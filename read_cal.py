@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 
-""" Lightmon Calibration Program
+""" Lightmon Read Calibration Table
 
-This program sweeps light sensor values through the calibration to confirm the performance
-of the calibration. 
+Reads the calibration table and writes it to a csv file named uid_cal.csv. 
+
 
 """
 import lm
@@ -13,15 +13,20 @@ import numpy
 
 if __name__ == "__main__":
 
-    parser = argparse.ArgumentParser(description='Verify the calibration table')
+    parser = argparse.ArgumentParser(description='Read and Store Calibration Table')
     parser.add_argument('-p',
                         dest='port',
                         help='Serial port device where sensor is connected, example: /dev/ttyACM0',
                         required=True)
 
+    parser.add_argument('-n',
+                        dest='num',
+                        help='ID number of the sensor',
+                        required=True)
+    
     args = parser.parse_args()
     sensor = lm.LightMon(args.port)
-    outfile = open("%s_cal.csv"%(sensor.get_uid().rstrip()),"w+")
+    outfile = open("./sensors/%s.csv"%(args.num),"w+")
     datastr = sensor.cal_read()
 #    print datastr
     outfile.write(datastr)
