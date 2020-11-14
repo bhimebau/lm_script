@@ -20,7 +20,7 @@ from twilio.rest import Client
 if __name__ == "__main__":
 
     account_sid = 'AC073919b600761868be304dbce85d1d8b'
-    auth_token='56fa4d513f8a3d09d8466c11eac6b999'
+    auth_token='1ad3627e21bccd97b6638428b9527b39'
     
     client = Client(account_sid, auth_token)
 
