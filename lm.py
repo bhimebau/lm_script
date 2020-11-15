@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 """ Lightmon Communication Primatives 
 Class to enable sending and receiving from the Lightmom 
@@ -26,7 +26,7 @@ class LightMon:
         if (self.open_port(lm_serial,baud)!=True):
             sys.exit(1)
         if (self.check_comm()!=True):
-            print "Lightmon failed to Respond to AT command "
+            print("Lightmon failed to Respond to AT command ")
             sys.exit(1)
 
         self.uid = 0
@@ -45,7 +45,7 @@ class LightMon:
             self.port = serial.Serial(serial_port, baud, timeout = self.timeout)
             return True
         except serial.serialutil.SerialException:
-            print "Error: Could not open",serial_port
+            print("Error: Could not open",serial_port)
             return False
     
     def send_command(self,command_string,timeout_seconds):
@@ -61,17 +61,17 @@ class LightMon:
         while ((response != "OK") and (response != "NOK")):
             response = self.port.readline().strip()
             if ((time.time() - tic) > timeout_seconds):
-                print "Command Timeout" 
+                print("Command Timeout")
                 return False
             if ((response != "") and (response != "OK") and (response != "ERROR") and (response != command_string)):
                 self.command_return_string = self.command_return_string + response + "\n"
         if (response == "OK"):
             retval = True
-#            print "Found OK"
+#            print("Found OK")
         else:
-            print "Received NOK"
+            print("Received NOK")
             retval = False
-#            print "Found NOK"
+#            print("Found NOK")
 
         # Receive the command prompt  
         tic = time.time()           
@@ -79,7 +79,7 @@ class LightMon:
         while (time_date_string.find(">")==-1):
             time_date_string = time_date_string + self.port.read().strip()
             if ((time.time() - tic) > 3):
-                print "Command Timeout looking for prompt" 
+                print("Command Timeout looking for prompt")
                 return False
         return(retval)
                
@@ -162,7 +162,7 @@ class LightMon:
             return (-1)
 #        cmd_str = "sky,%.1f"%(mag)
         cmd_str = "sky,table,%2.1f"%(mag)
-        print cmd_str
+        print(cmd_str)
         self.send_command(cmd_str,10000)
 
     def cal_write(self,mag,value):
@@ -170,7 +170,7 @@ class LightMon:
         if ((mag<15.3) or (mag>26.0)):
             return (-1)
         cmd_str = "cal,write,%.1f,%d"%(mag,value)
-        print cmd_str
+        print(cmd_str)
         self.send_command(cmd_str,10000)
 
     def cal_read(self):
@@ -214,28 +214,27 @@ class LightMon:
     
     def dac_write_raw(self,dac,rg):
         cmd_str = "sky,raw,%d,%d"%(int(dac),int(rg))
-#        print cmd_str
+#        print(cmd_str)
         self.send_command(cmd_str,10000)
         return (self.command_return_string)
    
     def dac_write_table(self,sky):
         cmd_str = "sky,table,%2.1f"%(sky)
-        print cmd_str
+        print(cmd_str)
         self.send_command(cmd_str,10000)
         return (self.command_return_string)
-
 
     
 if __name__ == "__main__":
     lm = LightMon()
-    print lm.uid
+    print(lm.uid)
     lm.settime()
     lm.send_command("tr",10000)
     print lm.command_return_string
     data_string = lm.get_data()
-    print data_string
+    print(data_string)
     log_string = lm.get_log()
-    print log_string
+    print(log_string)
     
 #   lm.send_command("data")
 #    print lm.command_return_string

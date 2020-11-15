@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 """ Lightmon Calibration Program
 
@@ -35,14 +35,14 @@ if __name__ == "__main__":
 
     
     args = parser.parse_args()
-    print "Initializing the Sensor"
+    print("Initializing the Sensor")
     sensor = lm.LightMon(args.port)
-    print "Initializing the Light Source"
+    print("Initializing the Light Source")
     light = lm.LightMon(args.led)
 
-    print "Erasing the Flash"
+    print("Erasing the Flash")
     sensor.cal_erase()                        # Erase the flash page for cal to -1  
-    print "Loading the initial values from flash to SRAM"
+    print("Loading the initial values from flash to SRAM")
     sensor.cal_load()                         # Load -1 from the flash to SRAM 
 #    array = np.arange(15.3,26.1,.1)          # Create an array of possible light values
     array = np.arange(15.3,24.1,.1)           # Create an array of possible light values
