@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 """ Enables the Calibration of the LED Light Source
 
@@ -28,18 +28,18 @@ if __name__ == "__main__":
 
     
     args = parser.parse_args()
-    print "Initializing the Sensor"
+    print("Initializing the Sensor")
     led = lm.LightMon(args.led_port)
-    print "Initializing the Light Source"
+    print("Initializing the Light Source")
     sqm = sqm.SQM_LU(args.sqm_port)
-    print "Opening Output File"
+    print("Opening Output File")
     outfile = open(args.ofile,"w+")
     sky = np.arange(15.3,26.0+.1,.1)
     outfile.write("LS,SQM")
     for value in sky:
         led.dac_write_table(value)
         sqm.read_raw()
-        outstr = "%2.1f,%2.2f"%(value,sqm.mpsas)
+        outstr = ("%2.1f,%2.2f"%(value,sqm.mpsas))
         print outstr
         outfile.write(outstr)
     outfile.close()

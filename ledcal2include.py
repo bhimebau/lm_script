@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 """ Program to convert Led Source Cal into include file for LED source
 
@@ -106,7 +106,7 @@ if __name__ == "__main__":
     r_47600 = []
        
     while line:
-#        print line,
+#        print(line,end='')
         line_list = line.split(",")
         dac.append(float(line_list[0]))
         r_316.append(float(line_list[1]))
@@ -129,7 +129,7 @@ if __name__ == "__main__":
     lowest_val = round(minmax(mins)[0]+.1,1)
     if lowest_val < 15:
         lowest_val = 15
-    # print lowest_val 
+    # print(lowest_val)
 
     maxs = []
     maxs.append(minmax(r_316)[1])
@@ -140,7 +140,7 @@ if __name__ == "__main__":
     highest_val = round(minmax(maxs)[1]-.1,1)
     if highest_val > 26:
         highest_val = 26
-   #  print highest_val 
+   #  print(highest_val)
     
     steps = np.arange(lowest_val,highest_val+.1,.1)
     steps = steps[::-1]

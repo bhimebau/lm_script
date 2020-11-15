@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 """ Lightmon Calibration Program
 
@@ -31,6 +31,6 @@ if __name__ == "__main__":
     for value in range(400000,50000000,100000):
         datastr =  "%s,%d"%(sensor.cal_lookup(value).rstrip(),value)
         outfile.write("%s\n"%(datastr))
-        print datastr
+        print(datastr)
     outfile.close()
     sensor.close_port()

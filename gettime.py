@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 """ Lightmon Time/Date Reporting Program
 
@@ -18,7 +18,7 @@ if __name__ == "__main__":
                         required=True)
     args = parser.parse_args()
     sensor = lm.LightMon(args.port)
-    print "Sensor's Current Date/Time:",sensor.gettime()
-    print "Time Delta (Sensor Time-System Time):",sensor.difftime(),"seconds"
+    print("Sensor's Current Date/Time:",sensor.gettime())
+    print("Time Delta (Sensor Time-System Time):",sensor.difftime(),"seconds")
     
     sensor.close_port()    

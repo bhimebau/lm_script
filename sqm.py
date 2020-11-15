@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 """ Unihedron Communication Primatives 
 Class to enable sending and receiving from the SQM LU
@@ -36,7 +36,7 @@ class SQM_LU:
             self.port = serial.Serial(serial_port, baud, timeout = self.timeout)
             return True
         except serial.serialutil.SerialException:
-            print "Error: Could not open",serial_port
+            print("Error: Could not open",serial_port)
             return False
     
     def send_command(self,command_string):
@@ -68,10 +68,10 @@ class SQM_LU:
 if __name__ == "__main__":
     sqm = SQM_LU()
     sqm.read_raw()
-    print sqm.command_return_string
-    print sqm.mpsas
-    print sqm.freq
-    print sqm.count
-    print sqm.period
-    print sqm.temp
+    print(sqm.command_return_string)
+    print(sqm.mpsas)
+    print(sqm.freq)
+    print(sqm.count)
+    print(sqm.period)
+    print(sqm.temp)
     sqm.close_port()    

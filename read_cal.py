@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 """ Lightmon Read Calibration Table
 
@@ -28,13 +28,13 @@ if __name__ == "__main__":
     sensor = lm.LightMon(args.port)
     outfile = open("./sensors/%s.csv"%(args.num),"w+")
     datastr = sensor.cal_read()
-#    print datastr
+#    print(datastr)
     outfile.write(datastr)
  
 #
 #    for value in range(400000,50000000,100000):
 #        datastr =  "%s,%d"%(sensor.cal_lookup(value).rstrip(),value)
 #        outfile.write("%s\n"%(datastr))
-#        print datastr
+#        print(datastr)
     outfile.close()
     sensor.close_port()

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 """ Lightmon Calibration Program
 
@@ -40,9 +40,9 @@ if __name__ == "__main__":
                         required=True)
         
     args = parser.parse_args()
-    print "Initializing the Sensor"
+    print("Initializing the Sensor")
     sensor = lm.LightMon(args.port)
-    print "Initializing the Light Source"
+    print("Initializing the Light Source")
     light = lm.LightMon(args.led)
 
     outfile = open("./sensors/%s_check.csv"%(args.num),"w+")
@@ -57,7 +57,7 @@ if __name__ == "__main__":
         sensor_data = float(sensor.tsl237_read_mag())
         outstr =  "%2.1f,%2.2f,%f\n"%(value,sensor_data,value-sensor_data)
         outfile.write(outstr)
-        print outstr,
+        print(outstr,end='')
     outfile.close()
     sensor.close_port()
     light.close_port()

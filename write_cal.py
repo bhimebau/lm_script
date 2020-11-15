@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 """ Calibration Writing Program 
 
@@ -35,7 +35,7 @@ if __name__ == "__main__":
         counts = int(elements[1])
         if (counts != -1):
             sensor.cal_write(sky,counts)
-            print "%2.1f %d"%(sky,counts)
+            print("%2.1f %d"%(sky,counts))
     sensor.cal_store()
     calfile.close()
     sensor.close_port()
