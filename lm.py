@@ -51,7 +51,7 @@ class LightMon:
     def send_command(self,command_string,timeout_seconds):
         """ Send a command to the LightMon's command interpreter """
         tic = time.time()
-        self.port.write(command_string + "\n")
+        self.port.write(str.encode(command_string + "\n"))
         # Receive Command Echo 
         response = self.port.readline().strip()
 
@@ -59,13 +59,15 @@ class LightMon:
         response = ""
         self.command_return_string = ""
         while ((response != "OK") and (response != "NOK")):
-            response = self.port.readline().strip()
+            response = (self.port.readline().strip()).decode('ascii')
+#            print(response)
             if ((time.time() - tic) > timeout_seconds):
                 print("Command Timeout")
                 return False
             if ((response != "") and (response != "OK") and (response != "ERROR") and (response != command_string)):
-                self.command_return_string = self.command_return_string + response + "\n"
-        if (response == "OK"):
+                self.command_return_string = self.command_return_string + str(response) + "\n"
+        if (str(response) == "OK"):
+ #           print("Response is true")
             retval = True
 #            print("Found OK")
         else:
@@ -77,7 +79,7 @@ class LightMon:
         tic = time.time()           
         time_date_string = ""
         while (time_date_string.find(">")==-1):
-            time_date_string = time_date_string + self.port.read().strip()
+            time_date_string = time_date_string + (self.port.read().strip()).decode('ascii')
             if ((time.time() - tic) > 3):
                 print("Command Timeout looking for prompt")
                 return False
@@ -230,7 +232,7 @@ if __name__ == "__main__":
     print(lm.uid)
     lm.settime()
     lm.send_command("tr",10000)
-    print lm.command_return_string
+    print(lm.command_return_string)
     data_string = lm.get_data()
     print(data_string)
     log_string = lm.get_log()

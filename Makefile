@@ -7,7 +7,7 @@ gettime: gettime.py lm.py
 	./gettime.py -p /dev/ttyACM0
 
 cal: cal.py lm.py
-	./cal.py -p /dev/ttyACM0 -l /dev/ttyUSB0
+	./cal.py -p /dev/ttyUSB1 -l /dev/ttyUSB0
 
 check: cal.py lm.py
 	./check.py -p /dev/ttyACM0 -l /dev/ttyUSB0 -n 201
