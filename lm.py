@@ -58,13 +58,13 @@ class LightMon:
         # Receive Command Response Payload
         response = ""
         self.command_return_string = ""
-        while ((response != "OK") and (response != "NOK")):
+        while ((str(response) != "OK") and (str(response) != "NOK")):
             response = (self.port.readline().strip()).decode('ascii')
 #            print(response)
             if ((time.time() - tic) > timeout_seconds):
                 print("Command Timeout")
                 return False
-            if ((response != "") and (response != "OK") and (response != "ERROR") and (response != command_string)):
+            if ((str(response) != "") and (str(response) != "OK") and (str(response) != "ERROR") and (str(response) != command_string)):
                 self.command_return_string = self.command_return_string + str(response) + "\n"
         if (str(response) == "OK"):
  #           print("Response is true")
@@ -199,7 +199,16 @@ class LightMon:
         cmd_str = "cal,lookup,%d"%(value)
         self.send_command(cmd_str,10000)
         return (self.command_return_string)
-                   
+
+    def cal_temperature(self):
+        cmd_str = "temp"
+        self.send_command(cmd_str,10000)
+        return(self.command_return_string)
+
+    def cal_write_temp_comp(self,temperature,ppm):
+        cmd_str = "cal,temp,%d,%d"%(temperature,ppm)
+        self.send_command(cmd_str,10000)
+    
     def get_uid(self):
         self.send_command("uid",10000)
         self.uid = self.command_return_string
@@ -212,7 +221,6 @@ class LightMon:
     def tsl237_read_mag(self):
         self.send_command("tsl237,mag",10000)
         return (self.command_return_string)
-
     
     def dac_write_raw(self,dac,rg):
         cmd_str = "sky,raw,%d,%d"%(int(dac),int(rg))
@@ -226,7 +234,7 @@ class LightMon:
         self.send_command(cmd_str,10000)
         return (self.command_return_string)
 
-    
+        
 if __name__ == "__main__":
     lm = LightMon()
     print(lm.uid)
