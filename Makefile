@@ -1,8 +1,8 @@
-SENSOR_PORT = /dev/ttyACM0 
+SENSOR_PORT = /dev/ttyUSB1
 LIGHT_SOURCE_PORT = /dev/ttyUSB0 
 CALIBRATION_FILE = sensors/201b.csv
 CAL_TEMP = 21
-PPM = 400
+PPM = 300
 
 all: 
 
