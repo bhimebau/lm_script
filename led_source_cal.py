@@ -11,7 +11,7 @@ import sqm
 
 if __name__ == "__main__":
 
-    parser = argparse.ArgumentParser(description='Set LightMon time and date')
+    parser = argparse.ArgumentParser(description='Calibrate the LED precision light source')
     parser.add_argument('-p',
                         dest='led_port',
                         help='Serial port device where precision led source is connected: /devttyACM0',
@@ -28,11 +28,11 @@ if __name__ == "__main__":
 
     
     args = parser.parse_args()
-    print("Initializing the Sensor")
+    print("Initializing precision LED source ...")
     led = lm.LightMon(args.led_port)
-    print("Initializing the Light Source")
+    print("Initializing the SQM ...")
     sqm = sqm.SQM_LU(args.sqm_port)
-    print("Opening Output File")
+    print(f"Opening Output File: {args.ofile}")
     outfile = open(args.ofile,"w+")
     rawfile = open("raw_"+args.ofile,"w+")
     for dac in range(200,4100,100):
