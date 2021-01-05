@@ -21,6 +21,9 @@ read_cal: read_cal.py lm.py
 get_uid: get_uid.py lm.py
 	./get_uid.py -p /dev/ttyACM0
 
+get_data: get_data.py lm.py
+	./get_data.py -p /dev/ttyACM1 -o ./data_pulls
+
 led_cal: sqm.py lm.py led_source_cal.py
 	./led_source_cal.py -p /dev/ttyACM0 -q /dev/ttyUSB0 -o led_data_3.csv
 
