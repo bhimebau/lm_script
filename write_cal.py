@@ -24,9 +24,21 @@ if __name__ == "__main__":
                         help='Master Calibration File: this stores data is the base calibration for all sensors.',
                         required=True)
 
-    
+    parser.add_argument('-t',
+                        dest='temperature',
+                        help='Temperature in C used to create the cal',
+                        required=True)
+
+    parser.add_argument('-m',
+                        dest='ppm',
+                        help='Accuracy of the sensor',
+                        required=True)
+
+        
     args = parser.parse_args()
     sensor = lm.LightMon(args.port)
+
+    sensor.cal_write_temp_comp(int(args.temperature),int(args.ppm))
     calfile = open(args.cal,"r")
     lines = calfile.readlines()
     for line in lines:

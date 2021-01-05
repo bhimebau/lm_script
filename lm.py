@@ -58,13 +58,13 @@ class LightMon:
         # Receive Command Response Payload
         response = ""
         self.command_return_string = ""
-        while ((response != "OK") and (response != "NOK")):
+        while ((str(response) != "OK") and (str(response) != "NOK")):
             response = (self.port.readline().strip()).decode('ascii')
 #            print(response)
             if ((time.time() - tic) > timeout_seconds):
                 print("Command Timeout")
                 return False
-            if ((response != "") and (response != "OK") and (response != "ERROR") and (response != command_string)):
+            if ((str(response) != "") and (str(response) != "OK") and (str(response) != "ERROR") and (str(response) != command_string)):
                 self.command_return_string = self.command_return_string + str(response) + "\n"
         if (str(response) == "OK"):
  #           print("Response is true")
@@ -158,6 +158,10 @@ class LightMon:
         
         return sensor_epoch + (4*3600) - system_epoch
         
+    def data_erase(self):
+        cmd_str = "ef,data"
+        self.send_command(cmd_str,10000)
+        
     def sky_write(self,mag):
         mag = round(mag,1)
         if ((mag<15.3) or (mag>24.0)):
@@ -199,7 +203,20 @@ class LightMon:
         cmd_str = "cal,lookup,%d"%(value)
         self.send_command(cmd_str,10000)
         return (self.command_return_string)
-                   
+
+    def cal_temperature(self):
+        cmd_str = "temp"
+        self.send_command(cmd_str,10000)
+        return(self.command_return_string)
+
+    def cal_write_temp_comp(self,temperature,ppm):
+        cmd_str = "cal,temp,%d,%d"%(temperature,ppm)
+        self.send_command(cmd_str,10000)
+
+    def cal_write_offset_comp(self,offset,scale):
+        self.send_command("cal,offset,%1.02f,%1.02f"%(offset,scale),10000)
+        return (self.command_return_string)
+        
     def get_uid(self):
         self.send_command("uid",10000)
         self.uid = self.command_return_string
@@ -212,7 +229,6 @@ class LightMon:
     def tsl237_read_mag(self):
         self.send_command("tsl237,mag",10000)
         return (self.command_return_string)
-
     
     def dac_write_raw(self,dac,rg):
         cmd_str = "sky,raw,%d,%d"%(int(dac),int(rg))
@@ -226,7 +242,7 @@ class LightMon:
         self.send_command(cmd_str,10000)
         return (self.command_return_string)
 
-    
+              
 if __name__ == "__main__":
     lm = LightMon()
     print(lm.uid)

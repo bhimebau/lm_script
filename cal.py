@@ -43,7 +43,12 @@ if __name__ == "__main__":
     print("Erasing the Flash")
     sensor.cal_erase()                        # Erase the flash page for cal to -1  
     print("Loading the initial values from flash to SRAM")
-    sensor.cal_load()                         # Load -1 from the flash to SRAM 
+    sensor.cal_load()                         # Load -1 from the flash to SRAM
+    print("Taking the calibration temperature")
+    temperature = int(sensor.cal_temperature())
+    print("Writing temperature and sensor ppm values to sensor cal")
+    sensor.cal_write_temp_comp(temperature,400)
+    
 #    array = np.arange(15.3,26.1,.1)          # Create an array of possible light values
     array = np.arange(15.3,24.1,.1)           # Create an array of possible light values
     for sky in array:                         # Step through each value
