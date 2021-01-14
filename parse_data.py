@@ -2,13 +2,14 @@
 
 """ Parse Data Commands
 
-This command is used to parse the data from the light sensors 
+This command is used to align data from the sensors. 
 
 """
 import lm
 import argparse
 import time
 import numpy
+import glob
 
 if __name__ == "__main__":
 
@@ -35,14 +36,20 @@ if __name__ == "__main__":
 
     parser.add_argument('-o',
                         dest='outfile',
-                        help='name of the output file, .csv will be added',
+                        help='base name of the output file, <outfile>_temp,<outfile>_mag, and <outfile>_batt will be created. Extension .csv will be added',
                         required=True)
-
-    serial_number = input("Enter the serial number of the sensor: 00")
     args = parser.parse_args()
-    sensor = lm.LightMon(args.port)
-    uid = sensor.get_uid()
-    fd = open(f"{args.write_dir.strip()}/Sensor_00{serial_number}_{uid.strip()}.csv","w")
-    fd.write(sensor.get_data())
-    fd.close()
-    sensor.close_port()
+    for key in vars(args).keys():
+        print(key,vars(args)[key])
+    files_list = []
+
+    # Determine names of the sensor data files
+    # Create a list of the filenames
+    for sensor in vars(args)['sensorlist'].split(','):
+        sensor_string = "002%02d"%(int(sensor))
+        for file in glob.glob(f'{args.datadir}/Sensor_{sensor_string}_*.csv'):
+            files_list.append([sensor_string,file])
+    print(files_list)
+    
+
+    

@@ -52,3 +52,6 @@ c2i: ledcal2include.py
 	./ledcal2include.py -i ./led_cal_data/led_data_3.csv -o ./led_cal_data/skydata
 	cp ./led_cal_data/skydata.c ../lm_application/Src
 	cp ./led_cal_data/skydata.h ../lm_application/Inc
+
+parse_data: parse_data.py
+	./parse_data.py -s 12/31/2020 -e 1/6/2021 -l "001,003,004" -d "./data_pulls" -o outfile.csv
