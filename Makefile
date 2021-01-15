@@ -54,4 +54,4 @@ c2i: ledcal2include.py
 	cp ./led_cal_data/skydata.h ../lm_application/Inc
 
 parse_data: parse_data.py
-	./parse_data.py -s 12/31/2020 -e 1/6/2021 -l "001,003,004" -d "./data_pulls" -o outfile.csv
+	./parse_data.py -s 12/31/2020 -e 1/6/2021 -l "003,004,005" -d "./data_pulls" -o outfile.csv
