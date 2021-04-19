@@ -1,10 +1,10 @@
-SENSOR_PORT = /dev/ttyACM0
+SENSOR_PORT = /dev/ttyUSB1
 LIGHT_SOURCE_PORT = /dev/ttyUSB0
 SQM_PORT = /dev/ttyACM1 
 
 CALIBRATION_FILE = sensors/201b.csv
 CAL_TEMP = 21
-PPM = 0
+PPM = 300
 
 all: 
 
@@ -39,7 +39,7 @@ led_table: sqm.py lm.py led_table.py
 	./led_table.py -p ${SENSOR_PORT} -q ${LIGHT_SOURCE_PORT} -o led_table_out_1.csv
 
 write_cal: write_cal.py lm.py
-	./write_cal.py -p ${SENSOR_PORT} -c ${CALIBRATION_FILE}
+	./write_cal.py -p ${SENSOR_PORT} -c ${CALIBRATION_FILE} -t ${CAL_TEMP} -m ${PPM}
 
 deploy: settime.py write_cal.py lm.py
 	./settime.py -p ${SENSOR_PORT}

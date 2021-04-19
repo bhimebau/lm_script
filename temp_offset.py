@@ -25,10 +25,10 @@ if __name__ == "__main__":
     light = lm.LightMon(args.led)
 
     sensor.cal_write_offset_comp(0,1)
-    light.sky_write(21.5)
+    light.sky_write(21.2)
     sensor_mag = float(sensor.tsl237_read_mag())
     print(sensor_mag)
-    offset = 21.5-sensor_mag
+    offset = 21.2-sensor_mag
     print("Storing offset %f to flash"%(offset))
     sensor.cal_write_offset_comp(offset,1)
     sensor.cal_store()
