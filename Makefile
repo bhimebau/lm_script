@@ -1,5 +1,5 @@
-SENSOR_PORT = /dev/ttyUSB1
-LIGHT_SOURCE_PORT = /dev/ttyUSB0
+SENSOR_PORT = /dev/ttyUSB0
+LIGHT_SOURCE_PORT = /dev/ttyUSB1
 SQM_PORT = /dev/ttyACM1 
 
 CALIBRATION_FILE = sensors/201b.csv
