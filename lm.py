@@ -102,7 +102,7 @@ class LightMon:
 
     def get_data(self):
         """ Pull all of the data from the sensor"""
-        self.send_command("data",300)
+        self.send_command("data",1000)
         return (self.command_return_string)
 
     def get_log(self):

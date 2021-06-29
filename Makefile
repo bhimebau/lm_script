@@ -30,7 +30,7 @@ get_uid: get_uid.py lm.py
 	./get_uid.py -p ${SENSOR_PORT}
 
 get_data: get_data.py lm.py
-	./get_data.py -p /dev/ttyUSB0 -o ./data_pulls
+	./get_data.py -p ${SENSOR_PORT} -o ./data_pulls
 
 led_cal: sqm.py lm.py led_source_cal.py
 	./led_source_cal.py -p ${LIGHT_SOURCE_PORT} -q ${SQM_PORT} -o led_data_3.csv
